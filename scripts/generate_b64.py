@@ -1,7 +1,7 @@
 import base64
 
 # ── Modifica questi valori ─────────────────────────────────────────────────────
-GITHUB_RAW_BASE  = "https://raw.githubusercontent.com/TUO_UTENTE/TUO_REPO/main"
+GITHUB_RAW_BASE  = "https://raw.githubusercontent.com/Gory-git/ChangeWindowsDesktopImage/main/scripts"
 SCRIPT_WALLPAPER = "Set-Wallpaper.ps1"
 SCRIPT_TASK      = "Register-WallpaperTask.ps1"
 # ──────────────────────────────────────────────────────────────────────────────
