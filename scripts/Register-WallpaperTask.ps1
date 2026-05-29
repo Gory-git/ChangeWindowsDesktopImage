@@ -11,7 +11,7 @@ $taskDesc   = "Downloads and sets desktop wallpaper at user logon."
 
 # Verifica che lo script esista
 if (-not (Test-Path $scriptPath)) {
-    throw "Script not found at: $scriptPath — copy Set-Wallpaper.ps1 there first."
+    throw "Script not found at: $scriptPath - copy Set-Wallpaper.ps1 there first."
 }
 
 # Parametri dell'azione
@@ -40,6 +40,6 @@ Register-ScheduledTask `
     -RunLevel   Limited `
     -Force | Out-Null
 
-Write-Host "✅ Task '$taskName' registered successfully." -ForegroundColor Green
+Write-Host "Task '$taskName' registered successfully." -ForegroundColor Green
 Write-Host "   Script path : $scriptPath"
 Write-Host "   Trigger     : At logon for $env:USERNAME"
