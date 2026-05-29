@@ -121,7 +121,9 @@ function Get-SessionRegistry {
 
 function Save-SessionRegistry {
     param([System.Collections.Generic.List[object]]$Registry)
-    $Registry | ConvertTo-Json -Depth 3 | Set-Content -Path $registryFile -Encoding UTF8
+    if ($Registry.Count -gt 0) {
+        $Registry | ConvertTo-Json -Depth 3 | Set-Content -Path $registryFile -Encoding UTF8
+    }
 }
 
 function Add-SessionEntry {
@@ -268,5 +270,7 @@ if ($explorer) {
 
 # ── Salva la sessione nel registro ───────────────────────────────────────────
 Add-SessionEntry -Registry $sessionRegistry -FilePath $destinationPath -FolderPath $destinationFolder | Out-Null
-Save-SessionRegistry -Registry $sessionRegistry
-Write-Log "Session registered. Total tracked entries: $(@($sessionRegistry).Count)"
+if (@($sessionRegistry).Count -gt 0) {
+    Save-SessionRegistry -Registry $sessionRegistry
+    Write-Log "Session registered. Total tracked entries: $(@($sessionRegistry).Count)"
+}
