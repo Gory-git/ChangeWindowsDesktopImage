@@ -1,4 +1,4 @@
-# ChangeWindowsDesktopImage
+# T-Dongle-S3_Desktop_Modifier
 
 Firmware per LilyGo T-Dongle-S3 che emula una tastiera HID e avvia uno script PowerShell per cambiare lo sfondo di Windows.
 
@@ -54,7 +54,7 @@ Non distribuire né usare questo progetto su dispositivi altrui senza permesso e
 
 ## Licenza
 
-Questo repository è rilasciato sotto licenza MIT. Vedi `LICENSE` (se presente) o considera di aggiungerla.
+Questo repository è rilasciato sotto licenza MIT.
 
 ## Contatti
 
