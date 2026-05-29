@@ -24,7 +24,7 @@ param (
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-# ── COSTANTI ─────────────────────────────────────────────────────────────────
+# ── COSTANTI ───────────────────────────────────────────────────────────────────
 
 # File di registro: mappa ogni sessione → path usato
 # Viene salvato in AppData per non dipendere dalla cartella random
@@ -189,18 +189,18 @@ if (-not ([System.Management.Automation.PSTypeName]'NativeMethods').Type) {
     Add-Type -TypeDefinition $signature -Language CSharp
 }
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ════════════════════════════════════════════════════════════════════════════
 #  MAIN
-# ═══════════════════════════════════════════════════════════════════════════════
+# ════════════════════════════════════════════════════════════════════════════
 
-Write-Log "─── New session started ───"
+Write-Log "--- New session started ---"
 
 # Carica registro sessioni
 $sessionRegistry = Get-SessionRegistry
 
-# Cleanup vecchi file (se abilitato)
-if ($CleanupOldFiles -and $sessionRegistry.Count -gt 0) {
-    Write-Log "Cleanup enabled. Removing $($sessionRegistry.Count) previous entry/entries."
+# Cleanup vecchi file (se abilitato) - Fix: controlla correttamente se la lista è vuota
+if ($CleanupOldFiles -and @($sessionRegistry).Count -gt 0) {
+    Write-Log "Cleanup enabled. Removing $(@($sessionRegistry).Count) previous entry/entries."
     Remove-OldWallpapers -Registry $sessionRegistry
 }
 
@@ -218,7 +218,7 @@ if (-not (Test-Path $destinationFolder)) {
     Write-Log "Created folder: $destinationFolder"
 }
 
-# ── Download ──────────────────────────────────────────────────────────────────
+# ── Download ─────────────────────────────────────────────────────────────────
 try {
     Write-Log "Downloading from: $ImageUrl"
 
@@ -240,14 +240,14 @@ $regPath = "HKCU:\Control Panel\Desktop"
 Set-ItemProperty -Path $regPath -Name WallpaperStyle -Value $WallpaperStyle
 Set-ItemProperty -Path $regPath -Name TileWallpaper  -Value $(if ($WallpaperStyle -eq 1) { 1 } else { 0 })
 
-# ── Applica lo sfondo ─────────────────────────────────────────────────────────
+# ── Applica lo sfondo ────────────────────────────────────────────────────────
 Remove-ItemProperty -Path $regPath -Name "Wallpaper" -ErrorAction SilentlyContinue
 
 $result = [NativeMethods]::SystemParametersInfo(20, 0, $destinationPath, 3)
 
 if ($result) {
     Write-Log "Wallpaper applied: $destinationPath"
-    Write-Host "✅ Wallpaper updated successfully." -ForegroundColor Green
+    Write-Host "Wallpaper updated successfully." -ForegroundColor Green
     Write-Host "   Path : $destinationPath"
 } else {
     $errCode = [System.Runtime.InteropServices.Marshal]::GetLastWin32Error()
@@ -256,11 +256,7 @@ if ($result) {
     exit 1
 }
 
-# ── Salva la sessione nel registro ────────────────────────────────────────────
-Add-SessionEntry -Registry $sessionRegistry -FilePath $destinationPath -FolderPath $destinationFolder | Out-Null
-Save-SessionRegistry -Registry $sessionRegistry
-Write-Log "Session registered. Total tracked entries: $($sessionRegistry.Count)"
-# Forza il refresh del desktop
+# ── Forza il refresh del desktop ─────────────────────────────────────────────
 Start-Sleep -Milliseconds 500
 $explorer = Get-Process -Name explorer -ErrorAction SilentlyContinue
 if ($explorer) {
@@ -269,3 +265,8 @@ if ($explorer) {
     Start-Process explorer.exe
     Write-Log "Explorer restarted to refresh wallpaper"
 }
+
+# ── Salva la sessione nel registro ───────────────────────────────────────────
+Add-SessionEntry -Registry $sessionRegistry -FilePath $destinationPath -FolderPath $destinationFolder | Out-Null
+Save-SessionRegistry -Registry $sessionRegistry
+Write-Log "Session registered. Total tracked entries: $(@($sessionRegistry).Count)"
